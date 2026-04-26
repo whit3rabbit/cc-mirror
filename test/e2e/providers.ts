@@ -28,6 +28,13 @@ export const PROVIDERS = [
     colorCode: '\\x1b[38;5;81m', // Neon cyan
   },
   {
+    key: 'deepseek',
+    name: 'DeepSeek',
+    apiKey: 'test-deepseek-key',
+    expectedThemeId: 'dark',
+    expectedSplashStyle: 'deepseek',
+  },
+  {
     key: 'openrouter',
     name: 'OpenRouter',
     apiKey: 'test-openrouter-key',

@@ -59,6 +59,11 @@ const C = {
   olSecondary: '\x1b[38;5;223m', // Light tan
   olAccent: '\x1b[38;5;137m', // Deep brown
   olDim: '\x1b[38;5;101m', // Muted brown
+  // DeepSeek: Ocean blue gradient (brand: #4d9de0)
+  dsPrimary: '\x1b[38;5;75m', // Ocean blue
+  dsSecondary: '\x1b[38;5;39m', // Sky blue
+  dsAccent: '\x1b[38;5;33m', // Deep blue
+  dsDim: '\x1b[38;5;24m', // Muted dark blue
   // Default: White/Gray
   defPrimary: '\x1b[38;5;255m', // White
   defDim: '\x1b[38;5;245m', // Gray
@@ -214,6 +219,22 @@ const SPLASH_ART: SplashArt = {
     `${C.ngSecondary}              All Models ${C.ngDim}━${C.ngSecondary} No Subscription${C.reset}`,
     '',
   ],
+  // DeepSeek: Wave + DEEP block letters
+  deepseek: [
+    '',
+    `${C.dsDim}    ≈≈≈${C.dsPrimary}≋≋≋≋≋${C.dsAccent}≋≋≋≋≋${C.dsPrimary}≋≋≋≋≋${C.dsDim}≈≈≈${C.reset}`,
+    '',
+    `${C.dsPrimary}    ██████╗ ███████╗███████╗██████╗ ${C.reset}`,
+    `${C.dsPrimary}    ██╔══██╗██╔════╝██╔════╝██╔══██╗${C.reset}`,
+    `${C.dsSecondary}    ██║  ██║█████╗  █████╗  ██████╔╝${C.reset}`,
+    `${C.dsSecondary}    ██║  ██║██╔══╝  ██╔══╝  ██╔═══╝ ${C.reset}`,
+    `${C.dsAccent}    ██████╔╝███████╗███████╗██║     ${C.reset}`,
+    `${C.dsAccent}    ╚═════╝ ╚══════╝╚══════╝╚═╝     ${C.reset}`,
+    '',
+    `${C.dsDim}    ━━━━━━━━━━━━━${C.dsPrimary}◆${C.dsDim}━━━━━━━━━━━━━${C.reset}`,
+    `${C.dsSecondary}      DeepSeek ${C.dsDim}━${C.dsSecondary} V4-Pro / V4-Flash${C.reset}`,
+    '',
+  ],
   // Ollama: Block letters
   ollama: [
     '',
@@ -251,6 +272,7 @@ const KNOWN_SPLASH_STYLES = [
   'vercel',
   'nanogpt',
   'ollama',
+  'deepseek',
 ];
 
 const buildWindowsWrapperScript = (opts: {
@@ -487,6 +509,12 @@ export const writeWrapper = (
     "        cat <<'CCMOL'",
     ...SPLASH_ART.ollama,
     'CCMOL',
+    '        __cc_show_label="0"',
+    '        ;;',
+    '      deepseek)',
+    "        cat <<'CCMDS'",
+    ...SPLASH_ART.deepseek,
+    'CCMDS',
     '        __cc_show_label="0"',
     '        ;;',
     '      *)',

@@ -104,6 +104,32 @@ export const PROVIDER_EDUCATION: Record<string, ProviderEducation> = {
       'Subscribe to Kimi Code, create an API key in the console, and set ANTHROPIC_BASE_URL to https://api.kimi.com/coding/.',
   },
 
+  deepseek: {
+    headline: 'DeepSeek — Deep Seek, Deep Think',
+    tagline: 'Ocean depths, sharp reasoning',
+    features: [
+      'Official Anthropic-compatible API endpoint',
+      'deepseek-v4-pro (1.6T, 49B active) for Opus tier',
+      'deepseek-v4-flash (284B, 13B active) for Sonnet/Haiku',
+      '1M-token context with thinking + non-thinking modes',
+      'Ocean blue-themed interface',
+    ],
+    bestFor: 'Cost-effective reasoning and coding with DeepSeek V4',
+    models: {
+      opus: 'deepseek-v4-pro',
+      sonnet: 'deepseek-v4-flash',
+      haiku: 'deepseek-v4-flash',
+    },
+    requiresMapping: false,
+    hasPromptPack: false,
+    setupLinks: {
+      subscribe: 'https://platform.deepseek.com',
+      apiKey: 'https://platform.deepseek.com/api_keys',
+      docs: 'https://api-docs.deepseek.com/guides/anthropic_api',
+    },
+    setupNote: 'Create an account at platform.deepseek.com, top up credits, then generate an API key.',
+  },
+
   openrouter: {
     headline: 'OpenRouter — One API, Any Model',
     tagline: 'Many paths, one door',
@@ -257,6 +283,7 @@ export const PROVIDER_COMPARISON = {
     'kimi',
     'minimax',
     'zai',
+    'deepseek',
     'openrouter',
     'vercel',
     'ollama',
