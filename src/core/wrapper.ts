@@ -74,6 +74,11 @@ const C = {
   poeSecondary: '\x1b[38;5;141m', // Light violet
   poeAccent: '\x1b[38;5;99m', // Deep purple
   poeDim: '\x1b[38;5;97m', // Muted violet
+  // Cerebras: Copper/Amber gradient (brand: #cc6600)
+  cbPrimary: '\x1b[38;5;208m', // Copper orange
+  cbSecondary: '\x1b[38;5;214m', // Amber
+  cbAccent: '\x1b[38;5;202m', // Deep rust
+  cbDim: '\x1b[38;5;130m', // Muted brown
   // Default: White/Gray
   defPrimary: '\x1b[38;5;255m', // White
   defDim: '\x1b[38;5;245m', // Gray
@@ -243,6 +248,22 @@ const SPLASH_ART: SplashArt = {
     `${C.poeSecondary}      Claude via Poe${C.reset}`,
     '',
   ],
+  // Cerebras: Wafer-grid header + CEREBRAS block letters
+  cerebras: [
+    '',
+    `${C.cbDim}    ▢▣▢▣${C.cbPrimary}▣▢▣▢▣▢${C.cbSecondary}▢▣▢▣▢▣${C.cbPrimary}▣▢▣▢▣▢${C.cbDim}▢▣▢▣${C.reset}`,
+    '',
+    `${C.cbPrimary}     ██████╗███████╗██████╗ ███████╗██████╗ ██████╗  █████╗ ███████╗${C.reset}`,
+    `${C.cbPrimary}    ██╔════╝██╔════╝██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝${C.reset}`,
+    `${C.cbSecondary}    ██║     █████╗  ██████╔╝█████╗  ██████╔╝██████╔╝███████║███████╗${C.reset}`,
+    `${C.cbSecondary}    ██║     ██╔══╝  ██╔══██╗██╔══╝  ██╔══██╗██╔══██╗██╔══██║╚════██║${C.reset}`,
+    `${C.cbAccent}    ╚██████╗███████╗██║  ██║███████╗██████╔╝██║  ██║██║  ██║███████║${C.reset}`,
+    `${C.cbAccent}     ╚═════╝╚══════╝╚═╝  ╚═╝╚══════╝╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝${C.reset}`,
+    '',
+    `${C.cbDim}    ━━━━━━━━━━━━━━━${C.cbPrimary}◆${C.cbDim} CS-3 wafer-scale ${C.cbPrimary}◆${C.cbDim}━━━━━━━━━━━━━━━${C.reset}`,
+    `${C.cbSecondary}     GLM-4.7 ${C.cbDim}+${C.cbSecondary} gpt-oss-120b ${C.cbDim}━ 1000-3000 tps via CCRouter${C.reset}`,
+    '',
+  ],
   // Alibaba: Cloud + block letters
   alibaba: [
     '',
@@ -317,6 +338,7 @@ const KNOWN_SPLASH_STYLES = [
   'deepseek',
   'alibaba',
   'poe',
+  'cerebras',
 ];
 
 const buildWindowsWrapperScript = (opts: {
@@ -571,6 +593,12 @@ export const writeWrapper = (
     "        cat <<'CCMPOE'",
     ...SPLASH_ART.poe,
     'CCMPOE',
+    '        __cc_show_label="0"',
+    '        ;;',
+    '      cerebras)',
+    "        cat <<'CCMCB'",
+    ...SPLASH_ART.cerebras,
+    'CCMCB',
     '        __cc_show_label="0"',
     '        ;;',
     '      *)',

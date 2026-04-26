@@ -24,6 +24,9 @@ export interface ProviderTemplate {
   authTokenAlsoSetsApiKey?: boolean;
   /** Default variant/CLI name when --name is omitted (avoids shadowing real CLIs) */
   defaultVariantName?: string;
+  /** Placeholder auth token written when credentialOptional + authToken provider has no key
+   * (e.g. CCRouter / Cerebras-via-CCRouter where the proxy handles real auth). */
+  authTokenFallback?: string;
 }
 
 export interface ModelOverrides {
@@ -34,8 +37,6 @@ export interface ModelOverrides {
   defaultModel?: string;
   subagentModel?: string;
 }
-
-const CCROUTER_AUTH_FALLBACK = 'ccrouter-proxy';
 
 // Canonical provider display order for CLI/TUI and docs-facing flows.
 // Any provider not listed here is appended after these entries.
@@ -51,6 +52,7 @@ export const PROVIDER_DISPLAY_ORDER = [
   'ollama',
   'nanogpt',
   'ccrouter',
+  'cerebras',
   'mirror',
   'gatewayz',
   'custom',
@@ -217,6 +219,36 @@ const PROVIDERS: Record<string, ProviderTemplate> = {
     authMode: 'authToken',
     requiresModelMapping: false, // Models configured in ~/.claude-code-router/config.json
     credentialOptional: true, // No API key needed - CCRouter handles auth
+    authTokenFallback: 'ccrouter-proxy',
+  },
+  // Cerebras has no Anthropic-compatible endpoint of its own (only OpenAI-compat),
+  // so this template is a CCRouter preset: baseUrl points at the local CCRouter
+  // default, model defaults are raw Cerebras IDs that CCRouter routes to the
+  // Cerebras backend when its config maps these names. Users who route under a
+  // provider-prefixed syntax (e.g. `cerebras,gpt-oss-120b`) override per-variant.
+  // Model picks (https://inference-docs.cerebras.ai/models/overview):
+  //   Opus   = zai-glm-4.7   (preview, 355B, 1000 tps, strongest coder)
+  //   Sonnet = gpt-oss-120b  (production, 120B, 3000 tps, fastest stable)
+  //   Haiku  = gpt-oss-120b  (same; llama3.1-8b deprecates 2026-05-27, qwen-3-235b
+  //                           also deprecates the same date, so we avoid both)
+  cerebras: {
+    key: 'cerebras',
+    label: 'Cerebras (via CCRouter)',
+    description: 'GLM-4.7 + gpt-oss-120b at 1000-3000 tps via Cerebras CS-3; requires CCRouter',
+    baseUrl: 'http://127.0.0.1:3456',
+    env: {
+      API_TIMEOUT_MS: DEFAULT_TIMEOUT_MS,
+      ANTHROPIC_DEFAULT_HAIKU_MODEL: 'gpt-oss-120b',
+      ANTHROPIC_DEFAULT_SONNET_MODEL: 'gpt-oss-120b',
+      ANTHROPIC_DEFAULT_OPUS_MODEL: 'zai-glm-4.7',
+      CC_MIRROR_SPLASH: 1,
+      CC_MIRROR_PROVIDER_LABEL: 'Cerebras',
+      CC_MIRROR_SPLASH_STYLE: 'cerebras',
+    },
+    apiKeyLabel: 'Cerebras key (optional - CCRouter handles auth)',
+    authMode: 'authToken',
+    credentialOptional: true,
+    authTokenFallback: 'cerebras-proxy',
   },
   ollama: {
     key: 'ollama',
@@ -421,10 +453,10 @@ export const buildEnv = ({ providerKey, baseUrl, apiKey, extraEnv, modelOverride
       if (provider.authTokenAlsoSetsApiKey) {
         env.ANTHROPIC_API_KEY = trimmed;
       }
-    } else if (providerKey === 'ccrouter') {
-      env.ANTHROPIC_AUTH_TOKEN = CCROUTER_AUTH_FALLBACK;
+    } else if (provider.authTokenFallback) {
+      env.ANTHROPIC_AUTH_TOKEN = provider.authTokenFallback;
       if (provider.authTokenAlsoSetsApiKey) {
-        env.ANTHROPIC_API_KEY = CCROUTER_AUTH_FALLBACK;
+        env.ANTHROPIC_API_KEY = provider.authTokenFallback;
       }
     }
     if (!provider.authTokenAlsoSetsApiKey && Object.hasOwn(env, 'ANTHROPIC_API_KEY')) {

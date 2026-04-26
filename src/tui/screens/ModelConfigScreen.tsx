@@ -107,6 +107,11 @@ function getPlaceholder(providerKey: string | undefined, model: 'opus' | 'sonnet
       sonnet: 'deepseek,deepseek-chat',
       haiku: 'ollama,qwen2.5-coder:latest',
     },
+    cerebras: {
+      opus: 'zai-glm-4.7',
+      sonnet: 'gpt-oss-120b',
+      haiku: 'gpt-oss-120b',
+    },
   };
 
   const providerPlaceholders = placeholders[providerKey || ''] || placeholders.ccrouter;

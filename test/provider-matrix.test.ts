@@ -99,6 +99,27 @@ test('Provider Feature Matrix', async (t) => {
     }
   });
 
+  await t.test('cerebras provider is a CCRouter preset with Cerebras model defaults', () => {
+    const cerebras = getProvider('cerebras');
+    assert.ok(cerebras, 'cerebras provider should exist');
+    assert.equal(cerebras.baseUrl, 'http://127.0.0.1:3456', 'cerebras should point at CCRouter default port');
+    assert.equal(cerebras.authMode, 'authToken', 'cerebras should use authToken mode');
+    assert.equal(cerebras.credentialOptional, true, 'cerebras should not require an API key (CCRouter handles auth)');
+    assert.equal(cerebras.authTokenFallback, 'cerebras-proxy', 'cerebras should set a placeholder auth token');
+    assert.equal(cerebras.env.ANTHROPIC_DEFAULT_OPUS_MODEL, 'zai-glm-4.7', 'cerebras Opus should be zai-glm-4.7');
+    assert.equal(cerebras.env.ANTHROPIC_DEFAULT_SONNET_MODEL, 'gpt-oss-120b', 'cerebras Sonnet should be gpt-oss-120b');
+    assert.equal(cerebras.env.ANTHROPIC_DEFAULT_HAIKU_MODEL, 'gpt-oss-120b', 'cerebras Haiku should be gpt-oss-120b');
+
+    // The buildEnv path with no apiKey must still emit a non-empty ANTHROPIC_AUTH_TOKEN
+    // (so the wrapper does not unset it via CC_MIRROR_UNSET_AUTH_TOKEN).
+    const env = buildEnv({ providerKey: 'cerebras' });
+    assert.equal(
+      env.ANTHROPIC_AUTH_TOKEN,
+      'cerebras-proxy',
+      'fallback token should be written when no key is provided'
+    );
+  });
+
   await t.test('zai provider has default models', () => {
     const zai = getProvider('zai');
     assert.ok(zai, 'zai provider should exist');

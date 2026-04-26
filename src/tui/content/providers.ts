@@ -196,6 +196,34 @@ export const PROVIDER_EDUCATION: Record<string, ProviderEducation> = {
     setupNote: 'Create an account, add credits, then generate an API key. You must set model aliases.',
   },
 
+  cerebras: {
+    headline: 'Cerebras — Wafer-scale inference at 1000-3000 tps',
+    tagline: 'Copper-fast Llama and GLM via the CS-3 chip',
+    features: [
+      'REQUIRES claude-code-router locally (Cerebras only ships an OpenAI-compat API)',
+      'Default Opus: zai-glm-4.7 (preview, 355B, ~1000 tps, strong coder)',
+      'Default Sonnet/Haiku: gpt-oss-120b (production, 120B, ~3000 tps)',
+      'Avoid llama3.1-8b and qwen-3-235b: both deprecate 2026-05-27',
+      'Copper/amber-themed interface',
+    ],
+    bestFor: 'Users who already run CCRouter and want extreme throughput on Cerebras CS-3',
+    models: {
+      opus: 'zai-glm-4.7',
+      sonnet: 'gpt-oss-120b',
+      haiku: 'gpt-oss-120b',
+    },
+    requiresMapping: false,
+    hasPromptPack: false,
+    setupLinks: {
+      subscribe: 'https://cloud.cerebras.ai',
+      apiKey: 'https://cloud.cerebras.ai',
+      docs: 'https://inference-docs.cerebras.ai/models/overview',
+      github: 'https://github.com/musistudio/claude-code-router',
+    },
+    setupNote:
+      'Install claude-code-router (npm i -g @musistudio/claude-code-router; ccr start), add a Cerebras provider entry to ~/.claude-code-router/config.json with your CEREBRAS_API_KEY, then create the cc-mirror variant. The variant points at http://127.0.0.1:3456 and pre-fills Cerebras model IDs.',
+  },
+
   ccrouter: {
     headline: 'CC Router — Local Model Gateway',
     tagline: 'Your models, your rules',
@@ -342,12 +370,13 @@ export const PROVIDER_COMPARISON = {
     'ollama',
     'nanogpt',
     'ccrouter',
+    'cerebras',
     'mirror',
     'gatewayz',
   ],
   requiresMapping: ['openrouter', 'ollama', 'gatewayz', 'vercel'],
   hasPromptPack: ['zai', 'minimax'],
-  localFirst: ['ccrouter', 'ollama'],
+  localFirst: ['ccrouter', 'cerebras', 'ollama'],
   pureClaudeCode: ['mirror'],
   recommended: ['mirror'],
 };

@@ -66,6 +66,14 @@ export const PROVIDERS = [
     colorCode: '\\x1b[38;5;39m', // Sky blue
   },
   {
+    key: 'cerebras',
+    name: 'Cerebras',
+    apiKey: '', // Optional - CCRouter handles auth
+    expectedThemeId: 'dark',
+    expectedSplashStyle: 'cerebras',
+    colorCode: '\\x1b[38;5;208m', // Copper orange
+  },
+  {
     key: 'ollama',
     name: 'Ollama',
     apiKey: 'ollama',

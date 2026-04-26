@@ -12,6 +12,7 @@ import { buildNanoGPTTweakccConfig } from './nanogpt.js';
 import { buildDeepSeekTweakccConfig } from './deepseek.js';
 import { buildAlibabaTweakccConfig } from './alibaba.js';
 import { buildPoeTweakccConfig } from './poe.js';
+import { buildCerebrasTweakccConfig } from './cerebras.js';
 
 export interface BrandPreset {
   key: string;
@@ -68,6 +69,12 @@ const BRAND_PRESETS: Record<string, BrandPreset> = {
     label: 'CCRouter Sky',
     description: 'Dark sky-blue palette for CC Router.',
     buildTweakccConfig: buildCCRouterTweakccConfig,
+  },
+  cerebras: {
+    key: 'cerebras',
+    label: 'Cerebras Copper',
+    description: 'Copper/amber palette evoking wafer-scale silicon.',
+    buildTweakccConfig: buildCerebrasTweakccConfig,
   },
   ollama: {
     key: 'ollama',

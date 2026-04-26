@@ -82,6 +82,7 @@ docs/
 │ ollama       │ Local + cloud      │ Auth Token   │ ✗          │
 │ nanogpt      │ Anthropic compat   │ Auth Token   │ ✗          │
 │ ccrouter     │ Local LLMs         │ Optional     │ ✗          │
+│ cerebras     │ GLM-4.7 / gpt-oss  │ Optional     │ ✗          │
 │ mirror       │ Claude (native)    │ OAuth/Key    │ ✗ Pure     │
 │ gatewayz     │ GatewayZ gateway   │ Auth Token   │ ✗          │
 └──────────────┴────────────────────┴──────────────┴────────────┘
@@ -101,6 +102,7 @@ docs/
 | `ollama`     | https://ollama.com                                            | https://ollama.com                                               | https://docs.ollama.com/api/anthropic-compatibility              |
 | `nanogpt`    | https://nano-gpt.com                                          | https://nano-gpt.com                                             | https://docs.nano-gpt.com/docs/anthropic-compatibility           |
 | `ccrouter`   | https://github.com/musistudio/claude-code-router#installation | https://github.com/musistudio/claude-code-router#2-configuration | https://github.com/musistudio/claude-code-router#2-configuration |
+| `cerebras`   | https://cloud.cerebras.ai                                     | https://cloud.cerebras.ai                                        | https://inference-docs.cerebras.ai/models/overview               |
 | `gatewayz`   | https://gatewayz.ai                                           | https://gatewayz.ai                                              | https://docs.gatewayz.ai/docs/anthropic-compatibility            |
 
 ---

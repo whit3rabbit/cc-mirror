@@ -35,10 +35,10 @@ COMMANDS
 
 OPTIONS (create/quick)
   --name <name>                Variant name (becomes CLI command)
-  --provider <name>            Provider: kimi | minimax | zai | deepseek | alibaba | poe | openrouter | vercel | ollama | nanogpt | ccrouter | mirror | gatewayz
+  --provider <name>            Provider: kimi | minimax | zai | deepseek | alibaba | poe | openrouter | vercel | ollama | nanogpt | ccrouter | cerebras | mirror | gatewayz
   --api-key <key>              Provider API key
   --auth-token <token>         Alias for --api-key (auth-token providers)
-  --brand <preset>             Theme: auto | none | kimi | minimax | zai | deepseek | alibaba | poe | openrouter | vercel | ollama | nanogpt | ccrouter | mirror | gatewayz
+  --brand <preset>             Theme: auto | none | kimi | minimax | zai | deepseek | alibaba | poe | openrouter | vercel | ollama | nanogpt | ccrouter | cerebras | mirror | gatewayz
   --tui / --no-tui             Force TUI on/off
 
 OPTIONS (advanced)
@@ -71,6 +71,7 @@ PROVIDERS
   ollama        Local + cloud models via Ollama
   nanogpt       NanoGPT
   ccrouter      Local LLMs via CC Router
+  cerebras      Cerebras via CCRouter (gpt-oss-120b, zai-glm-4.7)
   gatewayz      GatewayZ AI Gateway
 
 EXAMPLES
