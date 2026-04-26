@@ -13,7 +13,7 @@ Mirror Claude is a **pure Claude Code variant** with advanced features enabled. 
 │   │                    PROXY PROVIDERS                                  │  │
 │   │                                                                     │  │
 │   │   Z.ai ──────────▶ GLM API ────────▶ GLM-5/4.7/4.5-Air            │  │
-│   │   MiniMax ────────▶ MiniMax API ───▶ MiniMax-M2.5                  │  │
+│   │   MiniMax ────────▶ MiniMax API ───▶ MiniMax-M2.7                  │  │
 │   │   Kimi ───────────▶ Kimi API ──────▶ kimi-for-coding (K2.5)       │  │
 │   │                                                                     │  │
 │   └─────────────────────────────────────────────────────────────────────┘  │
