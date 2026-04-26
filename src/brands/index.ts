@@ -10,6 +10,7 @@ import { buildGatewayzTweakccConfig } from './gatewayz.js';
 import { buildVercelTweakccConfig } from './vercel.js';
 import { buildNanoGPTTweakccConfig } from './nanogpt.js';
 import { buildDeepSeekTweakccConfig } from './deepseek.js';
+import { buildAlibabaTweakccConfig } from './alibaba.js';
 
 export interface BrandPreset {
   key: string;
@@ -42,6 +43,12 @@ const BRAND_PRESETS: Record<string, BrandPreset> = {
     label: 'DeepSeek Abyss',
     description: 'Deep ocean blue palette with teal accents',
     buildTweakccConfig: buildDeepSeekTweakccConfig,
+  },
+  alibaba: {
+    key: 'alibaba',
+    label: 'Alibaba Aurora',
+    description: 'Purple, dark blue, and aqua palette for Alibaba Cloud Coding Plan.',
+    buildTweakccConfig: buildAlibabaTweakccConfig,
   },
   openrouter: {
     key: 'openrouter',

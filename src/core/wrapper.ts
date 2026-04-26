@@ -64,6 +64,11 @@ const C = {
   dsSecondary: '\x1b[38;5;39m', // Sky blue
   dsAccent: '\x1b[38;5;33m', // Deep blue
   dsDim: '\x1b[38;5;24m', // Muted dark blue
+  // Alibaba: Purple/Dark Blue/Aqua gradient (brand: #a371f7, #1f6feb, #2dd4bf)
+  alPrimary: '\x1b[38;5;141m', // Purple
+  alSecondary: '\x1b[38;5;33m', // Dark blue
+  alAccent: '\x1b[38;5;50m', // Aqua
+  alDim: '\x1b[38;5;97m', // Muted purple
   // Default: White/Gray
   defPrimary: '\x1b[38;5;255m', // White
   defDim: '\x1b[38;5;245m', // Gray
@@ -219,6 +224,24 @@ const SPLASH_ART: SplashArt = {
     `${C.ngSecondary}              All Models ${C.ngDim}━${C.ngSecondary} No Subscription${C.reset}`,
     '',
   ],
+  // Alibaba: Cloud + block letters
+  alibaba: [
+    '',
+    `${C.alDim}    ◈━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━◈${C.reset}`,
+    `${C.alSecondary}      A L I B A B A   C L O U D${C.reset}`,
+    `${C.alDim}    ◈━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━◈${C.reset}`,
+    '',
+    `${C.alPrimary}    ██████╗  ██████╗  █████╗ ██╗  ██╗███████╗██████╗ ${C.alAccent}███████╗███████╗${C.reset}`,
+    `${C.alPrimary}   ██╔════╝ ██╔═══██╗██╔══██╗╚██╗██╔╝██╔════╝██╔══██╗${C.alAccent}╚══███╔╝╚══███╔╝${C.reset}`,
+    `${C.alSecondary}   ██║  ███╗██║   ██║███████║ ╚███╔╝ █████╗  ██████╔╝${C.alAccent}  ███╔╝   ███╔╝${C.reset}`,
+    `${C.alSecondary}   ██║   ██║██║   ██║██╔══██║ ██╔██╗ ██╔══╝  ██╔══██╗${C.alAccent} ███╔╝   ███╔╝${C.reset}`,
+    `${C.alAccent}   ╚██████╔╝╚██████╔╝██║  ██║██╔╝ ██╗███████╗██║  ██║${C.alAccent}███████╗███████╗${C.reset}`,
+    `${C.alAccent}    ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝${C.alAccent}╚══════╝╚══════╝${C.reset}`,
+    '',
+    `${C.alDim}    ━━━━━━━━━━━━━━━━━━━━━━━${C.alPrimary}◆${C.alDim}━━━━━━━━━━━━━━━━━━━━━━━${C.reset}`,
+    `${C.alSecondary}           Coding Plan ${C.alDim}━${C.alSecondary} DashScope${C.reset}`,
+    '',
+  ],
   // DeepSeek: Wave + DEEP block letters
   deepseek: [
     '',
@@ -273,6 +296,7 @@ const KNOWN_SPLASH_STYLES = [
   'nanogpt',
   'ollama',
   'deepseek',
+  'alibaba',
 ];
 
 const buildWindowsWrapperScript = (opts: {
@@ -515,6 +539,12 @@ export const writeWrapper = (
     "        cat <<'CCMDS'",
     ...SPLASH_ART.deepseek,
     'CCMDS',
+    '        __cc_show_label="0"',
+    '        ;;',
+    '      alibaba)',
+    "        cat <<'CCMAL'",
+    ...SPLASH_ART.alibaba,
+    'CCMAL',
     '        __cc_show_label="0"',
     '        ;;',
     '      *)',

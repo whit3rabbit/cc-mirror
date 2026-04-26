@@ -75,6 +75,7 @@ docs/
 │ minimax      │ MiniMax-M2.7       │ API Key      │ ✓ Full     │
 │ zai          │ GLM-5/4.7/4.5-Air  │ API Key      │ ✓ Full     │
 │ deepseek     │ DeepSeek V4        │ API Key      │ ✗          │
+│ alibaba      │ Qwen3-Coder/Plus   │ API Key      │ ✗          │
 │ openrouter   │ You choose         │ Auth Token   │ ✗          │
 │ vercel       │ Vercel gateway     │ Auth Token   │ ✗          │
 │ ollama       │ Local + cloud      │ Auth Token   │ ✗          │

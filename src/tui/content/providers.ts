@@ -104,6 +104,33 @@ export const PROVIDER_EDUCATION: Record<string, ProviderEducation> = {
       'Subscribe to Kimi Code, create an API key in the console, and set ANTHROPIC_BASE_URL to https://api.kimi.com/coding/.',
   },
 
+  alibaba: {
+    headline: 'Alibaba Cloud — Coding Plan',
+    tagline: 'Qwen models via DashScope, Anthropic-compatible',
+    features: [
+      'Coding Plan endpoint (coding-intl.dashscope.aliyuncs.com)',
+      'qwen3-coder-plus for Opus tier (heavy coding)',
+      'qwen3.5-plus for Sonnet (balanced)',
+      'qwen3-coder-next for Haiku (fast)',
+      'Quota-based pricing with sliding 5h window',
+    ],
+    bestFor: 'Cost-effective coding via Alibaba Cloud Coding Plan subscription',
+    models: {
+      opus: 'qwen3-coder-plus',
+      sonnet: 'qwen3.5-plus',
+      haiku: 'qwen3-coder-next',
+    },
+    requiresMapping: false,
+    hasPromptPack: false,
+    setupLinks: {
+      subscribe: 'https://www.alibabacloud.com/help/en/model-studio/coding-plan',
+      apiKey: 'https://www.alibabacloud.com/help/en/model-studio/claude-code-coding-plan',
+      docs: 'https://www.alibabacloud.com/help/en/model-studio/claude-code',
+    },
+    setupNote:
+      'Subscribe to Coding Plan in Model Studio (Singapore region) and use the plan-specific API key (sk-sp-...).',
+  },
+
   deepseek: {
     headline: 'DeepSeek — Deep Seek, Deep Think',
     tagline: 'Ocean depths, sharp reasoning',
@@ -284,6 +311,7 @@ export const PROVIDER_COMPARISON = {
     'minimax',
     'zai',
     'deepseek',
+    'alibaba',
     'openrouter',
     'vercel',
     'ollama',

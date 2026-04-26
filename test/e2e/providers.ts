@@ -35,6 +35,13 @@ export const PROVIDERS = [
     expectedSplashStyle: 'deepseek',
   },
   {
+    key: 'alibaba',
+    name: 'Alibaba Cloud',
+    apiKey: 'test-alibaba-key',
+    expectedThemeId: 'dark',
+    expectedSplashStyle: 'alibaba',
+  },
+  {
     key: 'openrouter',
     name: 'OpenRouter',
     apiKey: 'test-openrouter-key',

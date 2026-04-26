@@ -72,6 +72,11 @@ function getPlaceholder(providerKey: string | undefined, model: 'opus' | 'sonnet
       sonnet: 'deepseek-v4-flash',
       haiku: 'deepseek-v4-flash',
     },
+    alibaba: {
+      opus: 'qwen3-coder-plus',
+      sonnet: 'qwen3.5-plus',
+      haiku: 'qwen3-coder-next',
+    },
     openrouter: {
       opus: 'anthropic/claude-3-opus',
       sonnet: 'anthropic/claude-3.5-sonnet',
