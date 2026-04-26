@@ -11,6 +11,7 @@ import { buildVercelTweakccConfig } from './vercel.js';
 import { buildNanoGPTTweakccConfig } from './nanogpt.js';
 import { buildDeepSeekTweakccConfig } from './deepseek.js';
 import { buildAlibabaTweakccConfig } from './alibaba.js';
+import { buildPoeTweakccConfig } from './poe.js';
 
 export interface BrandPreset {
   key: string;
@@ -49,6 +50,12 @@ const BRAND_PRESETS: Record<string, BrandPreset> = {
     label: 'Alibaba Aurora',
     description: 'Purple, dark blue, and aqua palette for Alibaba Cloud Coding Plan.',
     buildTweakccConfig: buildAlibabaTweakccConfig,
+  },
+  poe: {
+    key: 'poe',
+    label: 'Poe Violet',
+    description: 'Violet/purple theme for Poe API integration.',
+    buildTweakccConfig: buildPoeTweakccConfig,
   },
   openrouter: {
     key: 'openrouter',

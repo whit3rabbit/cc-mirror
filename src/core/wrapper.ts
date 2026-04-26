@@ -69,6 +69,11 @@ const C = {
   alSecondary: '\x1b[38;5;33m', // Dark blue
   alAccent: '\x1b[38;5;50m', // Aqua
   alDim: '\x1b[38;5;97m', // Muted purple
+  // Poe: Violet/Purple gradient (brand: #8b5cf6)
+  poePrimary: '\x1b[38;5;135m', // Violet
+  poeSecondary: '\x1b[38;5;141m', // Light violet
+  poeAccent: '\x1b[38;5;99m', // Deep purple
+  poeDim: '\x1b[38;5;97m', // Muted violet
   // Default: White/Gray
   defPrimary: '\x1b[38;5;255m', // White
   defDim: '\x1b[38;5;245m', // Gray
@@ -224,6 +229,20 @@ const SPLASH_ART: SplashArt = {
     `${C.ngSecondary}              All Models ${C.ngDim}━${C.ngSecondary} No Subscription${C.reset}`,
     '',
   ],
+  // Poe: Compact block letters
+  poe: [
+    '',
+    `${C.poePrimary}    ██████╗  ██████╗ ███████╗${C.reset}`,
+    `${C.poePrimary}    ██╔══██╗██╔═══██╗██╔════╝${C.reset}`,
+    `${C.poeSecondary}    ██████╔╝██║   ██║█████╗${C.reset}`,
+    `${C.poeSecondary}    ██╔═══╝ ██║   ██║██╔══╝${C.reset}`,
+    `${C.poeAccent}    ██║     ╚██████╔╝███████╗${C.reset}`,
+    `${C.poeAccent}    ╚═╝      ╚═════╝ ╚══════╝${C.reset}`,
+    '',
+    `${C.poeDim}    ━━━━━━━━━${C.poePrimary}◆${C.poeDim}━━━━━━━━━${C.reset}`,
+    `${C.poeSecondary}      Claude via Poe${C.reset}`,
+    '',
+  ],
   // Alibaba: Cloud + block letters
   alibaba: [
     '',
@@ -297,6 +316,7 @@ const KNOWN_SPLASH_STYLES = [
   'ollama',
   'deepseek',
   'alibaba',
+  'poe',
 ];
 
 const buildWindowsWrapperScript = (opts: {
@@ -545,6 +565,12 @@ export const writeWrapper = (
     "        cat <<'CCMAL'",
     ...SPLASH_ART.alibaba,
     'CCMAL',
+    '        __cc_show_label="0"',
+    '        ;;',
+    '      poe)',
+    "        cat <<'CCMPOE'",
+    ...SPLASH_ART.poe,
+    'CCMPOE',
     '        __cc_show_label="0"',
     '        ;;',
     '      *)',

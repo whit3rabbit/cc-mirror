@@ -35,10 +35,10 @@ COMMANDS
 
 OPTIONS (create/quick)
   --name <name>                Variant name (becomes CLI command)
-  --provider <name>            Provider: kimi | minimax | zai | deepseek | alibaba | openrouter | vercel | ollama | nanogpt | ccrouter | mirror | gatewayz
+  --provider <name>            Provider: kimi | minimax | zai | deepseek | alibaba | poe | openrouter | vercel | ollama | nanogpt | ccrouter | mirror | gatewayz
   --api-key <key>              Provider API key
   --auth-token <token>         Alias for --api-key (auth-token providers)
-  --brand <preset>             Theme: auto | none | kimi | minimax | zai | deepseek | alibaba | openrouter | vercel | ollama | nanogpt | ccrouter | mirror | gatewayz
+  --brand <preset>             Theme: auto | none | kimi | minimax | zai | deepseek | alibaba | poe | openrouter | vercel | ollama | nanogpt | ccrouter | mirror | gatewayz
   --tui / --no-tui             Force TUI on/off
 
 OPTIONS (advanced)
@@ -65,6 +65,7 @@ PROVIDERS
   zai           GLM-5/4.7/4.5-Air via Z.ai Coding Plan
   deepseek      DeepSeek-V4 (V4-Pro / V4-Flash) via Anthropic API
   alibaba       Alibaba Cloud Coding Plan (DashScope)
+  poe           Claude via Poe (api.poe.com)
   openrouter    100+ models via OpenRouter
   vercel        Vercel AI Gateway
   ollama        Local + cloud models via Ollama

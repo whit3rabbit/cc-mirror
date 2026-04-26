@@ -104,6 +104,27 @@ export const PROVIDER_EDUCATION: Record<string, ProviderEducation> = {
       'Subscribe to Kimi Code, create an API key in the console, and set ANTHROPIC_BASE_URL to https://api.kimi.com/coding/.',
   },
 
+  poe: {
+    headline: 'Poe — Claude via Unified Billing',
+    tagline: 'Violet streams, official Anthropic-compatible API',
+    features: [
+      'Anthropic-compatible endpoint at api.poe.com',
+      'Bearer token auth (ANTHROPIC_AUTH_TOKEN)',
+      'Save up to 15% with Poe unified billing',
+      'Official Anthropic Claude bots only (no third-party)',
+      'Violet-themed interface',
+    ],
+    bestFor: 'Claude users who want unified billing across multiple AI services',
+    requiresMapping: false,
+    hasPromptPack: false,
+    setupLinks: {
+      subscribe: 'https://poe.com/subscribe',
+      apiKey: 'https://poe.com/api_key',
+      docs: 'https://creator.poe.com/docs/external-applications/anthropic-compatible-api',
+    },
+    setupNote: 'Subscribe at poe.com, generate an API key from the API key page, then use as the auth token.',
+  },
+
   alibaba: {
     headline: 'Alibaba Cloud — Coding Plan',
     tagline: 'Qwen models via DashScope, Anthropic-compatible',
@@ -312,6 +333,7 @@ export const PROVIDER_COMPARISON = {
     'zai',
     'deepseek',
     'alibaba',
+    'poe',
     'openrouter',
     'vercel',
     'ollama',

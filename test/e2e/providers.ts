@@ -42,6 +42,14 @@ export const PROVIDERS = [
     expectedSplashStyle: 'alibaba',
   },
   {
+    key: 'poe',
+    name: 'Poe',
+    apiKey: 'test-poe-key',
+    expectedThemeId: 'dark',
+    expectedSplashStyle: 'poe',
+    colorCode: '\\x1b[38;5;135m', // Violet
+  },
+  {
     key: 'openrouter',
     name: 'OpenRouter',
     apiKey: 'test-openrouter-key',
