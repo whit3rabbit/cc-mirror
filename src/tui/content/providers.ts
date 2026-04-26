@@ -30,16 +30,16 @@ export const PROVIDER_EDUCATION: Record<string, ProviderEducation> = {
     headline: 'GLM Coding Plan via Z.ai',
     tagline: 'Gold streams, powerful reasoning',
     features: [
-      'GLM-5 for Opus (most capable) tasks',
-      'GLM-4.7 for Sonnet (balanced) tasks',
-      'GLM-4.5-Air for Haiku (fast) tasks',
-      'Prompt pack with zai-cli routing',
+      'Defaults (Max-tier): GLM-5.1 (Opus), GLM-5-turbo (Sonnet), GLM-4.5-Air (Haiku)',
+      'Lower-tier plans: pass --model-opus glm-4.7 (and matching --model-sonnet)',
+      'Official Z.ai MCP servers pre-registered (web-search-prime, web-reader, zread)',
+      'Built-in WebSearch/WebFetch proxied via Z.ai endpoint',
       'Gold-themed interface',
     ],
     bestFor: "Heavy coding with GLM's reasoning capabilities",
     models: {
-      opus: 'glm-5',
-      sonnet: 'glm-4.7',
+      opus: 'glm-5.1',
+      sonnet: 'glm-5-turbo',
       haiku: 'glm-4.5-air',
     },
     requiresMapping: false,
@@ -49,16 +49,18 @@ export const PROVIDER_EDUCATION: Record<string, ProviderEducation> = {
       apiKey: 'https://z.ai/manage-apikey/apikey-list',
       docs: 'https://z.ai/docs',
     },
-    setupNote: 'Subscribe to the Z.ai Coding Plan, then copy your API key from the dashboard.',
+    setupNote:
+      'Subscribe to the Z.ai Coding Plan, then copy your API key from the dashboard. Defaults are Max-tier (GLM-5.1 / 5-turbo / 4.5-Air); on the standard Coding Plan use --model-opus glm-4.7 --model-sonnet glm-4.7 to match the docs default.',
   },
 
   minimax: {
     headline: 'MiniMax — AGI for All',
     tagline: 'Coral pulses, unified model',
     features: [
-      'Single model for all tiers',
-      'Prompt pack with MCP tool routing',
-      'MCP tools for web search & vision',
+      'Default: MiniMax-M2.7 (latest, ~60 tps) across all tiers',
+      'Alt: -highspeed variants (~100 tps), or older M2.5 / M2.1 / M2',
+      'Override per tier: --model-sonnet, --model-opus, --model-haiku',
+      'MCP tools for web search & image understanding (auto-registered)',
       'Coral-themed interface',
     ],
     bestFor: 'Streamlined experience with one powerful model',
@@ -74,7 +76,8 @@ export const PROVIDER_EDUCATION: Record<string, ProviderEducation> = {
       apiKey: 'https://platform.minimax.io/user-center/payment/coding-plan',
       docs: 'https://platform.minimax.io/docs',
     },
-    setupNote: 'Subscribe to MiniMax Coding Plan, then get your API key from the payment page.',
+    setupNote:
+      'Subscribe to MiniMax Coding Plan, then get your API key from the payment page. Default model is MiniMax-M2.7; pass --model-sonnet/--model-opus/--model-haiku to pick a -highspeed (~100 tps) or older (M2.5, M2.1, M2) variant per tier.',
   },
 
   kimi: {

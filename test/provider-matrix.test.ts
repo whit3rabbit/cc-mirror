@@ -103,8 +103,8 @@ test('Provider Feature Matrix', async (t) => {
     const zai = getProvider('zai');
     assert.ok(zai, 'zai provider should exist');
     assert.equal(zai.env.ANTHROPIC_DEFAULT_HAIKU_MODEL, 'glm-4.5-air', 'zai should default haiku to glm-4.5-air');
-    assert.equal(zai.env.ANTHROPIC_DEFAULT_SONNET_MODEL, 'glm-4.7', 'zai should default sonnet to glm-4.7');
-    assert.equal(zai.env.ANTHROPIC_DEFAULT_OPUS_MODEL, 'glm-5', 'zai should default opus to glm-5');
+    assert.equal(zai.env.ANTHROPIC_DEFAULT_SONNET_MODEL, 'glm-5-turbo', 'zai should default sonnet to glm-5-turbo');
+    assert.equal(zai.env.ANTHROPIC_DEFAULT_OPUS_MODEL, 'glm-5.1', 'zai should default opus to glm-5.1');
   });
 
   await t.test('kimi provider has default models', () => {

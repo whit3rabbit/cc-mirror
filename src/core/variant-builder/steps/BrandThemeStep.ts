@@ -7,6 +7,7 @@ import {
   ensureMinimaxMcpServer,
   ensureOnboardingState,
   ensureSettingsPermissionsDeny,
+  ensureZaiMcpServers,
   MINIMAX_DENY_TOOLS,
   ZAI_DENY_TOOLS,
 } from '../../claude-config.js';
@@ -27,6 +28,10 @@ export class BrandThemeStep implements BuildStep {
 
     if (ctx.params.providerKey === 'minimax') {
       await ctx.report('Configuring MiniMax MCP server...');
+    }
+
+    if (ctx.params.providerKey === 'zai') {
+      await ctx.report('Configuring Z.ai MCP servers...');
     }
   }
 
@@ -71,7 +76,13 @@ export class BrandThemeStep implements BuildStep {
     if (params.providerKey === 'zai') {
       const denied = ensureSettingsPermissionsDeny(paths.configDir, ZAI_DENY_TOOLS);
       if (denied) {
-        state.notes.push('Blocked Z.ai injected tools (MCP + WebSearch/WebFetch) in settings.json.');
+        state.notes.push('Blocked Z.ai server-injected MCP tools in settings.json.');
+      }
+
+      ctx.report('Configuring Z.ai MCP servers...');
+      const mcpAdded = ensureZaiMcpServers(paths.configDir, state.resolvedApiKey);
+      if (mcpAdded) {
+        state.notes.push('Registered Z.ai MCP servers (web-search-prime, web-reader, zread, zai-mcp-server).');
       }
     }
 

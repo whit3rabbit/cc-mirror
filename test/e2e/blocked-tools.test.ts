@@ -22,7 +22,7 @@ test('E2E: Tool denies', async (t) => {
     }
   });
 
-  await t.test('zai settings.json denies provider-injected tools + built-in web tools', async () => {
+  await t.test('zai settings.json denies server-injected MCP tools', async () => {
     const rootDir = makeTempDir();
     const binDir = makeTempDir();
     createdDirs.push(rootDir, binDir);

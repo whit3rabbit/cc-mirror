@@ -58,8 +58,8 @@ const MODEL_FIELDS = [
 function getPlaceholder(providerKey: string | undefined, model: 'opus' | 'sonnet' | 'haiku'): string {
   const placeholders: Record<string, Record<string, string>> = {
     zai: {
-      opus: 'glm-5',
-      sonnet: 'glm-4.7',
+      opus: 'glm-5.1',
+      sonnet: 'glm-5-turbo',
       haiku: 'glm-4.5-air',
     },
     minimax: {
@@ -215,7 +215,7 @@ export const ModelConfigScreen: React.FC<ModelConfigScreenProps> = ({
           cc-mirror keeps startup default on Opus and small-fast on Haiku unless explicitly overridden.
         </Text>
         {providerKey === 'zai' && (
-          <Text color={colors.textDim}>Z.ai defaults: Opus=glm-5, Sonnet=glm-4.7, Haiku=glm-4.5-air.</Text>
+          <Text color={colors.textDim}>Z.ai defaults: Opus=glm-5.1, Sonnet=glm-5-turbo, Haiku=glm-4.5-air.</Text>
         )}
       </Box>
 

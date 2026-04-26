@@ -57,7 +57,8 @@ When you need external info, web content, or image understanding, follow this ro
    - Tree:   npx -y zai-cli repo tree <owner/repo> --depth 2 --output-format json
    - Read:   npx -y zai-cli repo read <owner/repo> <path> --output-format json
 
-The built in WebSearch/WebFetch tools are NOT available.
+Built-in WebSearch/WebFetch are allowed and proxied via Z.ai's Anthropic-compatible endpoint;
+prefer zai-cli for richer JSON output and explicit count/recency/domain filters.
 </tool_routing>
 
 <warning priority="critical">

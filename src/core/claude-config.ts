@@ -23,12 +23,12 @@ type SettingsFile = {
 };
 
 type McpServerConfig = {
+  type?: 'http' | 'stdio' | 'sse';
   command?: string;
   args?: string[];
   env?: Record<string, string>;
   url?: string;
-  headers?: string[];
-  transport?: string;
+  headers?: Record<string, string>;
 };
 
 const SETTINGS_FILE = 'settings.json';
@@ -51,13 +51,12 @@ const readSettingsApiKey = (configDir: string): string | null => {
 };
 
 export const ZAI_DENY_TOOLS = [
-  // Z.ai injects these MCP tools; they can break expected cc-mirror behavior.
+  // Z.ai injects these MCP tools server-side; they can break expected cc-mirror behavior.
+  // The official Z.ai MCP servers (registered via ensureZaiMcpServers) use distinct
+  // hyphenated names (mcp__web-reader__*, etc.) and are NOT blocked.
   'mcp__4_5v_mcp__analyze_image',
   'mcp__milk_tea_server__claim_milk_tea_coupon',
   'mcp__web_reader__webReader',
-  // Built-in tools that should be routed via zai-cli instead.
-  'WebSearch',
-  'WebFetch',
 ];
 
 export const MINIMAX_DENY_TOOLS = [
@@ -221,6 +220,77 @@ export const ensureOnboardingState = (
   return { updated: true, themeChanged, onboardingChanged };
 };
 
+export const ensureZaiMcpServers = (configDir: string, apiKey?: string | null): boolean => {
+  const resolvedKey = toStringOrNull(apiKey) || readSettingsApiKey(configDir);
+  const keyForServer = resolvedKey ?? 'Enter your API key';
+  const configPath = path.join(configDir, CLAUDE_CONFIG_FILE);
+  const exists = fs.existsSync(configPath);
+
+  let config: ClaudeConfig | null = null;
+  if (exists) {
+    config = readJson<ClaudeConfig>(configPath);
+    if (!config) return false;
+  } else {
+    config = {};
+  }
+
+  const existingServers = config.mcpServers ?? {};
+  // Schema must match what `claude mcp add` writes: type+url+headers-object for http,
+  // type+command+args+env for stdio. cc-mirror's parser silently drops entries shaped
+  // any other way, so this is not optional cosmetic alignment.
+  const httpHeaders: Record<string, string> = { Authorization: `Bearer ${keyForServer}` };
+
+  // Per-server add-if-missing: don't clobber a user-customised entry (e.g.,
+  // they swapped in a self-hosted url or different env). Mirrors the
+  // ensureMinimaxMcpServer convention: removed servers will get re-added on
+  // the next update.
+  const desiredServers: Record<string, McpServerConfig> = {
+    'web-search-prime': {
+      type: 'http',
+      url: 'https://api.z.ai/api/mcp/web_search_prime/mcp',
+      headers: httpHeaders,
+    },
+    'web-reader': {
+      type: 'http',
+      url: 'https://api.z.ai/api/mcp/web_reader/mcp',
+      headers: httpHeaders,
+    },
+    zread: {
+      type: 'http',
+      url: 'https://api.z.ai/api/mcp/zread/mcp',
+      headers: httpHeaders,
+    },
+    'zai-mcp-server': {
+      type: 'stdio',
+      command: 'npx',
+      args: ['-y', '@z_ai/mcp-server'],
+      env: {
+        Z_AI_API_KEY: keyForServer,
+        Z_AI_MODE: 'ZAI',
+      },
+    },
+  };
+
+  const merged: Record<string, McpServerConfig> = { ...existingServers };
+  let changed = false;
+  for (const [name, server] of Object.entries(desiredServers)) {
+    if (!merged[name]) {
+      merged[name] = server;
+      changed = true;
+    }
+  }
+
+  if (!changed) return false;
+
+  const next: ClaudeConfig = {
+    ...config,
+    mcpServers: merged,
+  };
+
+  writeJson(configPath, next);
+  return true;
+};
+
 export const ensureMinimaxMcpServer = (configDir: string, apiKey?: string | null): boolean => {
   const resolvedKey = toStringOrNull(apiKey) || readSettingsApiKey(configDir);
   const configPath = path.join(configDir, CLAUDE_CONFIG_FILE);
@@ -238,6 +308,7 @@ export const ensureMinimaxMcpServer = (configDir: string, apiKey?: string | null
   if (existingServers.MiniMax) return false;
 
   const mcpServer: McpServerConfig = {
+    type: 'stdio',
     command: 'uvx',
     args: ['minimax-coding-plan-mcp', '-y'],
     env: {

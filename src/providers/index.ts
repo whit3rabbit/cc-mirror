@@ -79,19 +79,29 @@ const PROVIDERS: Record<string, ProviderTemplate> = {
   zai: {
     key: 'zai',
     label: 'Zai Cloud',
-    description: 'GLM-5/4.7/4.5-Air via Z.ai Coding Plan',
+    description: 'GLM-5.1 / 5-turbo / 4.5-Air via Z.ai Coding Plan',
     baseUrl: 'https://api.z.ai/api/anthropic',
     env: {
       API_TIMEOUT_MS: DEFAULT_TIMEOUT_MS,
       ANTHROPIC_DEFAULT_HAIKU_MODEL: 'glm-4.5-air',
-      ANTHROPIC_DEFAULT_SONNET_MODEL: 'glm-4.7',
-      ANTHROPIC_DEFAULT_OPUS_MODEL: 'glm-5',
+      ANTHROPIC_DEFAULT_SONNET_MODEL: 'glm-5-turbo',
+      ANTHROPIC_DEFAULT_OPUS_MODEL: 'glm-5.1',
       CC_MIRROR_SPLASH: 1,
       CC_MIRROR_PROVIDER_LABEL: 'Zai Cloud',
       CC_MIRROR_SPLASH_STYLE: 'zai',
     },
     apiKeyLabel: 'Zai API key',
   },
+  // Auth header note: MiniMax's two docs disagree on which Anthropic env var to use.
+  //   - Coding Plan setup: ANTHROPIC_AUTH_TOKEN (Authorization: Bearer)
+  //     https://platform.minimax.io/docs/guides/text-ai-coding-tools
+  //   - API quickstart:    ANTHROPIC_API_KEY    (x-api-key)
+  //     https://platform.minimax.io/docs/guides/quickstart-preparation
+  // The api.minimax.io/anthropic endpoint accepts both. We use ANTHROPIC_API_KEY
+  // (apiKey mode by default below) for consistency with our other API-key providers
+  // (zai, kimi, custom). The Coding Plan doc's separate warning that env-var
+  // ANTHROPIC_AUTH_TOKEN takes priority over settings.json is neutralized by the
+  // wrapper's CC_MIRROR_UNSET_AUTH_TOKEN=1 unset-on-launch, set in WriteConfigStep.
   minimax: {
     key: 'minimax',
     label: 'MiniMax Cloud',
