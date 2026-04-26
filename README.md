@@ -20,10 +20,46 @@
 
 ---
 
+## This Fork
+
+Active fork of [numman-ali/cc-mirror](https://github.com/numman-ali/cc-mirror). Upstream has been slow to merge, so this branch ships ahead with newer Claude Code releases and extra providers. Install from git until upstream catches up (the `cc-mirror` package on npm does not yet include the changes below).
+
+What this fork adds:
+
+- **Latest Claude Code.** `--claude-version stable|latest|<x.y.z>` pins or tracks any upstream channel, and the variant builder refreshes defaults as Anthropic ships. `cc-mirror update` pulls newer CC builds without waiting on the npm release cadence.
+- **More providers.** DeepSeek (V4), Alibaba Cloud Coding Plan, Poe (Anthropic-compatible), Cerebras (via CCRouter), plus refreshed defaults for Z.ai (GLM-5.1) and MiniMax (M2.7).
+- **macOS feature parity.** Brand themes and provider prompt overlays now apply on macOS via an unpack-and-run-via-node fallback (upstream skips both on darwin).
+
+### Install from git
+
+```bash
+git clone https://github.com/whit3rabbit/cc-mirror.git
+cd cc-mirror
+npm install
+npm run bundle
+
+# Run from source
+npm run dev -- quick --provider mirror --name mclaude
+
+# Or link as a global cc-mirror command
+npm link
+cc-mirror quick --provider mirror --name mclaude
+```
+
+Pull updates later:
+
+```bash
+git pull && npm install && npm run bundle
+```
+
+> Requires Node 20+. macOS variants additionally require `node` in `PATH` at runtime (any modern Node) because brand/prompt patches run via the unpack-and-node fallback.
+
+---
+
 ## Quick Start
 
 ```bash
-# Fastest path to a configured Claude Code variant
+# Fastest path to a configured Claude Code variant (uses the upstream npm package)
 npx cc-mirror quick --provider mirror --name mclaude
 
 # Run it
