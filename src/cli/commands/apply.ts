@@ -26,11 +26,14 @@ export async function runApplyCommand({ opts }: ApplyCommandOptions): Promise<vo
   const rawTweakccStdio = opts['tweakcc-stdio'] as string | undefined;
   const tweakccStdio =
     rawTweakccStdio === 'inherit' || opts.verbose ? 'inherit' : rawTweakccStdio === 'pipe' ? 'pipe' : 'pipe';
+  const promptPack = opts['no-prompt-pack'] ? false : undefined;
 
   const result = await core.updateVariantAsync(rootDir, target, {
     binDir,
     settingsOnly: true,
+    brand: opts.brand as string | undefined,
     noTweak: Boolean(opts.noTweak),
+    promptPack,
     tweakccStdio,
   });
 

@@ -12,7 +12,11 @@ import { resolveBrandKey } from '../../../brands/index.js';
 import { ensureOnboardingState } from '../../claude-config.js';
 import { DEFAULT_CLAUDE_NATIVE_CACHE_DIR } from '../../constants.js';
 import { ensureDir } from '../../fs.js';
-import { resolveNativeClaudePath, restorePristineBinary } from '../../install.js';
+import {
+  resolveNativeClaudePath,
+  restorePristineBinary as defaultRestorePristineBinary,
+  type RestorePristineResult,
+} from '../../install.js';
 import { resolveOverlays } from '../../prompt-pack/overlays.js';
 import type { OverlayMap, PromptPackKey } from '../../prompt-pack/types.js';
 import { applyPatches as defaultApplyPatches, type PatchResult } from '../../binary-patcher/index.js';
@@ -52,6 +56,20 @@ const patchResultToFailure = (result: PatchResult & { ok: false }): TweakccPatch
   output: `${result.reason}: ${result.detail}`,
 });
 
+const resolvedVersionFromMeta = (claudeOrig?: string): string | undefined => {
+  const prefix = 'native:';
+  if (!claudeOrig?.startsWith(prefix)) return undefined;
+  const value = claudeOrig.slice(prefix.length).trim();
+  return value || undefined;
+};
+
+const restoreFailureDetail = (restore: RestorePristineResult): string => {
+  if (restore.reason === 'copy-failed') {
+    return `copy failed${restore.error ? `: ${restore.error.message}` : ''}`;
+  }
+  return `cached pristine binary is missing at ${restore.cachePath ?? '<cacheDir>/<version>/<platform>/claude'}`;
+};
+
 const performRollback = (ctx: UpdateContext, failure: TweakccPatchFailure): void => {
   const { meta, state } = ctx;
 
@@ -64,7 +82,7 @@ const performRollback = (ctx: UpdateContext, failure: TweakccPatchFailure): void
     );
   }
 
-  const restore = restorePristineBinary({
+  const restore = defaultRestorePristineBinary({
     binaryPath: meta.binaryPath,
     cacheDir: DEFAULT_CLAUDE_NATIVE_CACHE_DIR,
     resolvedVersion: state.nativeResolvedVersion,
@@ -99,6 +117,7 @@ const resolveOverlaysFor = (providerKey: string, enabled: boolean): OverlayMap |
 export interface BinaryPatcherUpdateStepDeps {
   applyPatches?: typeof defaultApplyPatches;
   unpackAndPatch?: typeof defaultUnpackAndPatch;
+  restorePristineBinary?: typeof defaultRestorePristineBinary;
 }
 
 export class BinaryPatcherUpdateStep implements UpdateStep {
@@ -123,6 +142,9 @@ export class BinaryPatcherUpdateStep implements UpdateStep {
       ctx.report('Patching Claude Code binary...');
     }
 
+    state.nativeResolvedVersion ??= resolvedVersionFromMeta(meta.claudeOrig);
+    state.nativePlatform ??= meta.nativePlatform;
+
     ensureDir(meta.tweakDir);
 
     if (opts.brand !== undefined) {
@@ -134,6 +156,10 @@ export class BinaryPatcherUpdateStep implements UpdateStep {
 
     const config = loadConfig(meta.tweakDir);
     if (!config) return;
+
+    if (!this.restorePristineForSettingsOnly(ctx)) {
+      return;
+    }
 
     const overlays = resolveOverlaysFor(meta.provider, prefs.promptPackEnabled);
     const apply = this.deps.applyPatches ?? defaultApplyPatches;
@@ -169,6 +195,36 @@ export class BinaryPatcherUpdateStep implements UpdateStep {
     if (result.codesignSkipped) {
       state.notes.push('Binary is unsigned (codesign not available); first launch may show a Gatekeeper prompt.');
     }
+  }
+
+  private restorePristineForSettingsOnly(ctx: UpdateContext): boolean {
+    const { opts, meta, state } = ctx;
+    if (!opts.settingsOnly) return true;
+
+    if (!state.nativeResolvedVersion || !state.nativePlatform) {
+      const detail =
+        'Settings-only tweak skipped: variant metadata is missing the resolved native version or platform needed to restore the pristine binary cache.';
+      state.tweakResult = { status: 1, stderr: detail, stdout: '' };
+      state.notes.push(detail);
+      return false;
+    }
+
+    const restore = this.deps.restorePristineBinary ?? defaultRestorePristineBinary;
+    const result = restore({
+      binaryPath: meta.binaryPath,
+      cacheDir: DEFAULT_CLAUDE_NATIVE_CACHE_DIR,
+      resolvedVersion: state.nativeResolvedVersion,
+      platform: state.nativePlatform,
+    });
+
+    if (!result.restored) {
+      const detail = `Settings-only tweak skipped: ${restoreFailureDetail(result)}. Run cc-mirror update ${meta.name} to redownload Claude Code, then retry tweak.`;
+      state.tweakResult = { status: 1, stderr: detail, stdout: '' };
+      state.notes.push(detail);
+      return false;
+    }
+
+    return true;
   }
 
   /**

@@ -29,6 +29,7 @@ COMMANDS
   list                         List all variants
   update [name]                Update Claude Code (default: latest)
   apply <name>                 Re-apply theme + prompt patches (no reinstall)
+  tweak <name>                 Alias for apply (self-contained, no npx tweakcc)
   remove <name>                Remove a variant
   doctor                       Health check all variants
   unpack <name|path>           Extract embedded JS modules from a Claude Code binary
@@ -79,6 +80,7 @@ EXAMPLES
   npx cc-mirror quick --provider zai --api-key "$Z_AI_API_KEY"
   npx cc-mirror quick --provider alibaba --api-key "$ALIBABA_API_KEY"
   npx cc-mirror apply mclaude
+  npx cc-mirror tweak mclaude --brand zai
   npx cc-mirror update mclaude --claude-version latest
   npx cc-mirror doctor
 

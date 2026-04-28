@@ -18,9 +18,9 @@
    |-- config/           # CLAUDE_CONFIG_DIR
    |   |-- settings.json # env overrides (API keys, model mappings, tool denies)
    |   '-- .claude.json  # API-key approvals + onboarding + MCP server seeds
-   |-- tweakcc/          # tweakcc config/backup
-   |   |-- config.json   # brand preset + theme config
-   |   '-- system-prompts/ # prompt fragment overlays (prompt packs)
+   |-- tweakcc/          # tweakcc-compatible config
+   |   '-- config.json   # brand preset + theme config
+   |-- unpacked/         # macOS node-runtime fallback when Mach-O cannot grow
    '-- variant.json      # metadata
 
   wrapper -> <bin-dir>/<variant>
@@ -31,12 +31,12 @@ Default `<bin-dir>` is `~/.local/bin` on macOS/Linux and `~/.cc-mirror/bin` on W
 
 ## Core Components
 
-- `src/providers/index.ts` — provider templates and env defaults
-- `src/brands/` — tweakcc brand presets (optional UI skins)
-- `src/core/` — file ops, tweakcc patching, variant CRUD (split by concern)
-- `src/cli/index.ts` — CLI entrypoint, launches TUI when interactive
-- `src/tui/` — Ink-based TUI wizard (components + app + entrypoint)
-- `tweakcc` (dependency) — applies `cli.js` patches for each variant
+- `src/providers/index.ts`: provider templates and env defaults
+- `src/brands/`: tweakcc brand presets (optional UI skins)
+- `src/core/`: file ops, in-repo binary patching, variant CRUD (split by concern)
+- `src/cli/index.ts`: CLI entrypoint, launches TUI when interactive
+- `src/tui/`: Ink-based TUI wizard (components + app + entrypoint)
+- `src/core/binary-patcher/`: self-contained tweakcc-compatible theme and prompt overlay patcher
 
 ## TUI Flow
 
@@ -68,18 +68,18 @@ Default `<bin-dir>` is `~/.local/bin` on macOS/Linux and `~/.cc-mirror/bin` on W
 
 ## Updating Binaries
 
-- `cc-mirror update` rebuilds the `native/` + `tweakcc/` directories (preserving config, tasks, skills, approvals), then re-downloads the native binary and reapplies tweakcc for a clean upgrade.
+- `cc-mirror update` rebuilds the `native/` + `tweakcc/` directories (preserving config, tasks, skills, approvals), then re-downloads the native binary and reapplies cc-mirror's in-repo patcher for a clean upgrade.
 
 ## Maintenance Checklist
 
 - Update all variants after Claude Code upgrades: `cc-mirror update`
 - Update a single variant: `cc-mirror update <name>`
-- Reapply or change brand preset: `cc-mirror update <name> --brand zai`
+- Reapply patches without reinstalling Claude Code: `cc-mirror apply <name>`
+- Reapply or change brand preset without reinstalling Claude Code: `cc-mirror tweak <name> --brand zai`
 - Adjust API keys/base URL: edit `~/.cc-mirror/<variant>/config/settings.json`
-- Launch tweakcc UI for a variant: `cc-mirror tweak <name>`
 - Opt out of prompt packs: `--no-prompt-pack`
-- Select prompt pack mode: `--prompt-pack-mode minimal`
-- Opt out of skill install: `--no-skill-install`
+- Refresh local tweakcc reference sources: `scripts/vendor-tweakcc.sh --force`
+- Download local system prompt references: `scripts/vendor-system-prompts.sh --force`
 
 ## Provider Extensibility
 
@@ -107,9 +107,9 @@ MiniMax variants seed a default MCP server entry in `~/.cc-mirror/<variant>/conf
 
 Z.ai and MiniMax variants add deny lists for known server-side MCP tools in `~/.cc-mirror/<variant>/config/settings.json` under `permissions.deny`, pushing the model toward provider-native tools (e.g., `zai-cli` for Z.ai, MiniMax MCP for MiniMax).
 
-Prompt packs (provider overlays) are injected into tweakcc prompt fragments after tweakcc runs, then re-applied so the patched binary includes provider guidance.
+Prompt packs (provider overlays) are injected directly into the bundled `cli.js` prompt strings by `src/core/binary-patcher/prompts.ts`; on macOS, the same patch is applied to the unpacked entry JS used by the node-runtime fallback.
 
-dev-browser is installed into `~/.cc-mirror/<variant>/config/skills/dev-browser` by default for Z.ai and MiniMax variants (opt out with `--no-skill-install`).
+The self-contained patcher intentionally supports cc-mirror's managed surface only: brand themes and provider prompt overlays. Other upstream tweakcc features (toolsets, input highlighters, statusline tweaks, model selector patches, etc.) are not applied unless they are explicitly ported into `src/core/binary-patcher/`.
 
 ## Brand Presets
 

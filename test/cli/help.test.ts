@@ -31,9 +31,10 @@ test('printHelp outputs usage information', () => {
   assert.ok(text.includes('quick'), 'Should include quick command');
   assert.ok(text.includes('list'), 'Should include list command');
   assert.ok(text.includes('update'), 'Should include update command');
+  assert.ok(text.includes('apply'), 'Should include apply command');
+  assert.ok(text.includes('tweak'), 'Should include tweak alias');
   assert.ok(text.includes('remove'), 'Should include remove command');
   assert.ok(text.includes('doctor'), 'Should include doctor command');
-  assert.ok(text.includes('tweak'), 'Should include tweak command');
 });
 
 test('printHelp documents provider options', () => {

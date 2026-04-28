@@ -7,8 +7,8 @@
  *  - linux ELF / win32 PE: applyPatches resizes the entry JS in place; the
  *    wrapper runs and reports the expected version.
  *  - darwin Mach-O: applyPatches detects that theme + prompt patches would
- *    grow the entry JS, skips the patch, and surfaces a clear note. The
- *    pristine binary stays in place and still launches.
+ *    grow the entry JS, then createVariantAsync falls back to extracting and
+ *    patching cli.js for the node runtime.
  *
  * Network-gated by CC_MIRROR_NETWORK_TESTS=1 because the test downloads
  * ~200 MB of binary on first run. CI sets this env var; local runs skip
@@ -55,14 +55,15 @@ test(
       assert.equal(result.meta.tweakRolledBack ?? false, false, 'patcher should not have rolled back');
 
       if (isMac) {
-        // Mach-O: patch is skipped because theme + overlays grow the entry JS.
-        // Note is appended; tweakResult.status is 0 (the skip is a successful
-        // outcome, not a failure).
+        // Mach-O: in-place patching is skipped because theme + overlays grow
+        // the entry JS. The build should fall back to patched unpacked JS.
         assert.ok(result.tweakResult, 'expected tweakResult to be set');
         assert.equal(result.tweakResult?.status, 0);
+        assert.equal(result.meta.wrapperRuntime, 'node');
+        assert.ok(result.meta.nodeEntryPath, 'node fallback should set nodeEntryPath');
         assert.ok(
-          result.notes?.some((n) => /Mach-O patch skipped/.test(n)),
-          `expected Mach-O skip note, got: ${JSON.stringify(result.notes)}`
+          result.notes?.some((n) => /running unpacked JS via node/.test(n)),
+          `expected macOS node fallback note, got: ${JSON.stringify(result.notes)}`
         );
       } else {
         // Linux ELF: the patch should land. tweakResult.status === 0 with no

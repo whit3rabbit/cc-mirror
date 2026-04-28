@@ -63,6 +63,7 @@ const main = async () => {
       break;
 
     case 'apply':
+    case 'tweak':
       await runApplyCommand({ opts });
       break;
 

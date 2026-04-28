@@ -227,6 +227,7 @@ npx cc-mirror create [options]    # Full configuration wizard
 npx cc-mirror list                # List all variants
 npx cc-mirror update [name]       # Update one or all variants
 npx cc-mirror apply <name>        # Re-apply theme + prompt patches (no reinstall)
+npx cc-mirror tweak <name>        # Alias for apply, no external tweakcc needed
 npx cc-mirror remove <name>       # Delete a variant
 npx cc-mirror doctor              # Health check all variants
 
@@ -261,9 +262,27 @@ kimi                              # Run Kimi Code variant
 
 Each provider includes a custom color theme applied by cc-mirror's in-repo
 binary patcher (anchor patterns adapted from [tweakcc](https://github.com/Piebald-AI/tweakcc)
-under MIT — see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)). On macOS,
-themes are currently disabled (Mach-O segment shifting not yet implemented);
-linux and Windows variants get the full theme.
+under MIT, see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)). cc-mirror
+does not shell out to `npx tweakcc`; it writes a tweakcc-compatible
+`tweakcc/config.json` and applies supported theme + prompt overlay patches
+itself. On macOS, patches run through an unpacked-JS node fallback when the
+native Mach-O binary would need to grow.
+
+Reapply tweaks per installed variant:
+
+```bash
+npx cc-mirror tweak zai
+npx cc-mirror tweak minimax
+npx cc-mirror tweak zai --brand zai
+npx cc-mirror tweak minimax --no-prompt-pack
+```
+
+`tweak` is an alias for `apply`: it does not reinstall Claude Code, and it
+does not call external `npx tweakcc`. It reads the named variant from
+`~/.cc-mirror/<name>/variant.json`, restores the cached pristine native binary,
+refreshes the tweakcc-compatible config, then reapplies cc-mirror's supported
+theme and prompt overlay patches. Use `update <name>` instead when you want to
+download a new Claude Code binary or rebuild a missing cache entry.
 
 | Brand          | Style                            |
 | -------------- | -------------------------------- |
@@ -276,6 +295,26 @@ linux and Windows variants get the full theme.
 | **nanogpt**    | Aurora green + cyan accents      |
 | **ccrouter**   | Sky blue accents                 |
 | **gatewayz**   | Violet gradients                 |
+
+### Porting More tweakcc Features
+
+cc-mirror currently ports the managed surface it needs: brand themes and
+provider prompt overlays. Porting another upstream tweakcc patch usually means:
+
+1. Identify the upstream patch in `Piebald-AI/tweakcc/src/patches/` and pin the
+   upstream commit in `THIRD_PARTY_NOTICES.md` when code or anchors are ported.
+2. Add typed config fields and brand defaults only if the feature is actually
+   applied by cc-mirror.
+3. Implement the patch under `src/core/binary-patcher/`, with structured
+   failure results instead of thrown partial writes.
+4. Wire both runtime paths: native binary patching (`applyPatches`) and the
+   macOS unpacked-JS fallback (`patchUnpackedEntry`).
+5. Account for binary growth: ELF and PE can resize, Mach-O needs same-size
+   writes or the node fallback.
+6. Add fixture tests for success, missing anchors, rollback safety, and prompt
+   or config idempotence.
+7. Document the supported feature so unsupported upstream tweakcc settings do
+   not look active just because a config key exists.
 
 ---
 
@@ -291,9 +330,10 @@ linux and Windows variants get the full theme.
 
 ## Related Projects
 
-- [tweakcc](https://github.com/Piebald-AI/tweakcc) — Theme and customize Claude Code (cc-mirror's binary-patcher anchors are adapted from this project under MIT)
-- [Claude Code Router](https://github.com/musistudio/claude-code-router) — Route Claude Code to any LLM
-- [n-skills](https://github.com/numman-ali/n-skills) — Universal skills for AI agents
+- [tweakcc](https://github.com/Piebald-AI/tweakcc): Theme and customize Claude Code (cc-mirror's binary-patcher anchors are adapted from this project under MIT)
+- [Claude Code System Prompts](https://github.com/Piebald-AI/claude-code-system-prompts): Reference prompt corpus used for anchor checks and prompt diff research
+- [Claude Code Router](https://github.com/musistudio/claude-code-router): Route Claude Code to any LLM
+- [n-skills](https://github.com/numman-ali/n-skills): Universal skills for AI agents
 
 ---
 
